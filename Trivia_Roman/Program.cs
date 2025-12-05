@@ -22,7 +22,6 @@ namespace Trivia_Roman
         static int score;
         static int numAnswer;
         static string name = "";
-        static string input;
 
         static void Main(string[] args)
         {
@@ -35,8 +34,12 @@ namespace Trivia_Roman
             }
 
             AddQuestions();
-            PlayGame();
-
+            do
+            {
+                score = 0;
+                PlayGame();
+            }
+            while (AskPlayAgain());
         }
 
         static void PlayGame()
@@ -50,24 +53,58 @@ namespace Trivia_Roman
                 Console.ForegroundColor = ConsoleColor.White;
 
                 Console.SetCursorPosition(0, 0);
-                Console.WriteLine(name);
+                Console.Write($"«««««");
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.Write(name);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write("»»»»»                     ");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write($"Score: {score}/10");
 
-                Console.SetCursorPosition(0, 2);
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine();
+                Console.WriteLine("-------------------------------------------------");
+
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.SetCursorPosition(0, 3);
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine($"Question {qNumber[i]} : ");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(questions[i]);
                 Console.WriteLine(qAnswer1[i]);
                 Console.WriteLine(qAnswer2[i]);
                 Console.WriteLine(qAnswer3[i]);
                 Console.WriteLine(qAnswer4[i]);
 
-                Console.SetCursorPosition(0, 9);
+                Console.WriteLine();
+                Console.WriteLine("-------------------------------------------------");
+
+                Console.SetCursorPosition(0, 11);
                 string answer = Console.ReadLine();
+
+                if (answer == "Michael Tweedale")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Easter Egg Found! +5 Points!");
+                    Console.WriteLine();
+                    Console.ReadKey(true);
+
+                    Console.WriteLine("What??? No, I didn't proggram that in...");
+                    Console.ReadKey(true);
+                    Console.WriteLine("You don't deserve those points anyway.");
+                    Console.ReadKey(true);
+                    Console.WriteLine("Get the hell out of here!");
+                    Console.ReadKey(true);
+
+                    Environment.Exit(0);
+                }
+
                 while (!int.TryParse(answer, out numAnswer) || answer.Length > 1 || numAnswer < 1 || numAnswer > 4)
                 {
                     Console.WriteLine("Wrong input, try again");
-                    Console.SetCursorPosition(0, 9);
-                    Console.Write("          ");
-                    Console.SetCursorPosition(0, 9);
+                    Console.SetCursorPosition(0, 11);
+                    Console.Write("                                                                          ");
+                    Console.SetCursorPosition(0, 11);
                     answer = Console.ReadLine();
                 }
 
@@ -76,11 +113,11 @@ namespace Trivia_Roman
                 {
                     Console.CursorVisible = false;
                     score++;
-                    Console.SetCursorPosition(0, 9);
+                    Console.SetCursorPosition(0, 11);
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write(numAnswer);
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.SetCursorPosition(0, 11);
+                    Console.SetCursorPosition(0, 13);
                     Console.WriteLine("Press any button for next question");
                     Console.ReadKey();
 
@@ -88,36 +125,60 @@ namespace Trivia_Roman
                 else
                 {
                     Console.CursorVisible = false;
-                    Console.SetCursorPosition(0, 9);
+                    Console.SetCursorPosition(0, 11);
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write(numAnswer);
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.SetCursorPosition(0, 11);
+                    Console.SetCursorPosition(0, 13);
                     Console.WriteLine("Press any button for next question");
                     Console.ReadKey();
                 }
-
-
             }
 
             Console.Clear();
-            Console.Write($"Your score is {score}/10");
+            if(score == 10)
+            {
+                Console.WriteLine($"Your score is {score}/10");
+                Console.WriteLine("Perfect score! Congratulations!");
+            }
+            else if(score >= 7)
+            {
+                Console.WriteLine($"Your score is {score}/10");
+                Console.WriteLine("Well done!");
+            }
+            else if(score >= 4)
+            {
+                Console.WriteLine($"Your score is {score}/10");
+                Console.WriteLine("Not bad, but you can do better!");
+            }
+            else
+            {
+                Console.WriteLine($"Your score is {score}/10");
+                Console.WriteLine("Better luck next time!");
+            }
+        }
 
-            while (input != "Y" || input != "N")
+        static bool AskPlayAgain()
+        {
+            while (true)
             {
                 Console.SetCursorPosition(0, 2);
+                Console.WriteLine();
                 Console.WriteLine("Do you want to play again? Y/N");
-                input = Console.ReadLine();
+                string answer = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(answer))
+                {
+                    Console.WriteLine("Wrong input, try again");
+                    continue;
+                }
 
-                if (input == "Y")
-                {
-                    score = 0;
-                    PlayGame();
-                }
-                else if (input == "N")
-                {
-                    Environment.Exit(0);
-                }
+                answer = answer.Trim().ToUpperInvariant();
+
+                if (answer == "Y") return true;
+
+                if (answer == "N") return false;
+
+                Console.WriteLine("Wrong input, try again");
             }
         }
 
